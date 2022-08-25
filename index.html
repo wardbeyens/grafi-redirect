@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="https://jellyfin.org/favicon.ico"
+      type="image/x-icon"
+    />
+    <title>Jellyfin</title>
+  </head>
+
+  <body>
+    <code>
+      javascript: (() => { function reqListener() { if
+      (JSON.parse(this.responseText).origin == "84.196.7.4") {
+      window.location.assign("http://192.168.0.77:8096/") } else {
+      window.location.assign("https://grafi.ml/") } } const req = new
+      XMLHttpRequest(); req.addEventListener("load", reqListener);
+      req.open("GET", "https://httpbin.org/get"); req.send(); })()
+    </code>
+
+    <script>
+      function reqListener() {
+        if (JSON.parse(this.responseText).origin == "84.196.7.4") {
+          window.location.assign("http://192.168.0.77:8096/");
+        } else {
+          window.location.assign("https://grafi.ml/");
+        }
+      }
+      const req = new XMLHttpRequest();
+      req.addEventListener("load", reqListener);
+      req.open("GET", "https://httpbin.org/get");
+      req.send();
+    </script>
+  </body>
+</html>

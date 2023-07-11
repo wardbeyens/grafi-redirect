@@ -17,7 +17,7 @@
       javascript: (() => { function reqListener() { if
       (JSON.parse(this.responseText).origin == "84.196.7.4") {
       window.location.assign("http://192.168.0.77:8096/") } else {
-      window.location.assign("https://grafi.ml/") } } const req = new
+      window.location.assign("https://grafi.wabyte.com/") } } const req = new
       XMLHttpRequest(); req.addEventListener("load", reqListener);
       req.open("GET", "https://httpbin.org/get"); req.send(); })()
     </code>
@@ -27,7 +27,7 @@
         if (JSON.parse(this.responseText).origin == "84.196.7.4") {
           window.location.assign("http://192.168.0.77:8096/");
         } else {
-          window.location.assign("https://grafi.ml/");
+          window.location.assign("https://grafi.wabyte.com/");
         }
       }
       const req = new XMLHttpRequest();

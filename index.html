@@ -10,30 +10,124 @@
       type="image/x-icon"
     />
     <title>Jellyfin</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .container {
+        background-color: #ffffff;
+        padding: 20px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        text-align: center;
+        max-width: 500px;
+        width: 100%;
+      }
+
+      code {
+        display: block;
+        background-color: #f5f5f5;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        overflow-x: auto;
+        margin-bottom: 20px;
+      }
+    </style>
   </head>
 
   <body>
-    <code>
-      javascript: (() => { function reqListener() { if
-      (JSON.parse(this.responseText).origin == "84.196.7.4") {
-      window.location.assign("http://192.168.0.77:8096/") } else {
-      window.location.assign("https://grafi.wabyte.com/") } } const req = new
-      XMLHttpRequest(); req.addEventListener("load", reqListener);
-      req.open("GET", "https://httpbin.org/get"); req.send(); })()
-    </code>
+    <div class="container">
+      <h1>Jellyfin</h1>
+      <code>
+        javascript: (() => {
+          function determineRedirection(vpnIp) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const grafiParam = urlParams.get('grafi') || 'grafi.wabyte.com';
+
+            function handleClientIpResponse() {
+              const clientIp = JSON.parse(this.responseText).origin;
+              if (clientIp === vpnIp) {
+                window.location.assign("http://192.168.0.77:8096/");
+              } else {
+                window.location.assign(`https://${grafiParam}/`);
+              }
+            }
+
+            const clientIpRequest = new XMLHttpRequest();
+            clientIpRequest.addEventListener("load", handleClientIpResponse);
+            clientIpRequest.open("GET", "https://httpbin.org/get");
+            clientIpRequest.send();
+          }
+
+          function fetchVpnIp() {
+            const dnsRequest = new XMLHttpRequest();
+            dnsRequest.open("GET", "https://dns.google/resolve?name=vpn.wardbeyens.be&type=A", true);
+            dnsRequest.onreadystatechange = function () {
+              if (dnsRequest.readyState === 4 && dnsRequest.status === 200) {
+                const response = JSON.parse(dnsRequest.responseText);
+                const vpnIp = response.Answer ? response.Answer[0].data : null;
+                if (vpnIp) {
+                  determineRedirection(vpnIp);
+                } else {
+                  console.error("Failed to retrieve the VPN IP address.");
+                }
+              }
+            };
+            dnsRequest.send();
+          }
+
+          fetchVpnIp();
+        })();
+      </code>
+    </div>
 
     <script>
-      function reqListener() {
-        if (JSON.parse(this.responseText).origin == "84.196.7.4") {
-          window.location.assign("http://192.168.0.77:8096/");
-        } else {
-          window.location.assign("https://grafi.wabyte.com/");
+      function determineRedirection(vpnIp) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const grafiParam = urlParams.get('grafi') || 'grafi.wabyte.com';
+
+        function handleClientIpResponse() {
+          const clientIp = JSON.parse(this.responseText).origin;
+          if (clientIp === vpnIp) {
+            window.location.assign("http://192.168.0.77:8096/");
+          } else {
+            window.location.assign(`https://${grafiParam}/`);
+          }
         }
+
+        const clientIpRequest = new XMLHttpRequest();
+        clientIpRequest.addEventListener("load", handleClientIpResponse);
+        clientIpRequest.open("GET", "https://httpbin.org/get");
+        clientIpRequest.send();
       }
-      const req = new XMLHttpRequest();
-      req.addEventListener("load", reqListener);
-      req.open("GET", "https://httpbin.org/get");
-      req.send();
+
+      function fetchVpnIp() {
+        const dnsRequest = new XMLHttpRequest();
+        dnsRequest.open("GET", "https://dns.google/resolve?name=vpn.wardbeyens.be&type=A", true);
+        dnsRequest.onreadystatechange = function () {
+          if (dnsRequest.readyState === 4 && dnsRequest.status === 200) {
+            const response = JSON.parse(dnsRequest.responseText);
+            const vpnIp = response.Answer ? response.Answer[0].data : null;
+            if (vpnIp) {
+              determineRedirection(vpnIp);
+            } else {
+              console.error("Failed to retrieve the VPN IP address.");
+            }
+          }
+        };
+        dnsRequest.send();
+      }
+
+      fetchVpnIp();
     </script>
   </body>
 </html>
